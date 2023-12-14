@@ -31,9 +31,10 @@ class SQLiteDB {
   static List<String> tableSQLStrings =
   [
     '''
-    CREATE TABLE IF NOT EXISTS expense (id INTEGER PRIMARY KEY AUTOINCREMENT,
+    CREATE TABLE IF NOT EXISTS expense (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
       amount DOUBLE,
-      desc TEXT,
+      description TEXT,
       dateTime DATETIME)
     ''',
   ];

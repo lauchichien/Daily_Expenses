@@ -17,7 +17,7 @@ class Expense {
         amount = double.parse(json['amount'] as dynamic),
         dateTime = json['dateTime'] as String;
 
-  Map<String, dynamic> toJson() =>{'id':id,'desc' :desc , 'amount':amount, 'dateTime':dateTime};
+  Map<String, dynamic> toJson() =>{'id':id,'description' :desc , 'amount':amount, 'dateTime':dateTime};
 
   Future<Expense?> save() async{
 

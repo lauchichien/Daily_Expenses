@@ -1,7 +1,7 @@
-import 'package:daily_expenses/enter_ip.dart';
 import 'package:flutter/material.dart';
 import 'dailyexpenses.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(const MaterialApp(
@@ -20,16 +20,18 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  TextEditingController ipAddressController = TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(onPressed: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>EnterIp()));
-      },
-        child: Icon(Icons.settings),
 
-      ),
       appBar: AppBar(
         title: const Text("Login Screen"),
       ),
@@ -66,32 +68,52 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
-              ElevatedButton(onPressed: (){
-                String username = usernameController.text;
-                String password = passwordController.text;
-                if(username == "test" && password=="123"){
-                  Navigator.push(context, MaterialPageRoute(builder:
-                      (context)=>DailyExpenseApp(username: username,),
-                  ));
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: TextField(
+                  controller: ipAddressController,
+                  decoration: InputDecoration(
+                    labelText: "REST API address",
+                  ),),
+              ),
+              ElevatedButton(
+                  onPressed: () async{
+                    String username = usernameController.text;
+                    String password = passwordController.text;
+                    if(username == 'test' && password == '123'){
+                      final prefs = await SharedPreferences.getInstance();
+                      String ip = ipAddressController.text;
+                      await prefs.setString("ip", ip);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context)=> DailyExpenseApp(username: username),
+                        ),
+                      );
 
-                }
-                else{
-                  showDialog(context: context, builder: (context){
-                    return AlertDialog(
-                      title: const Text("Login Failed"),
-                      content: const Text("Invalid username or password"),
-                      actions: [
-                        TextButton(onPressed: (){
-                          Navigator.pop(context);
-                        }, child: const Text("OK"))
-                      ],
-                    );
-                  });
-
-
-                }
-              },
-                  child: const Text("Login")),
+                    }
+                    else {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: const Text('Login Failed'),
+                              content: const Text('Invalid username or password.'),
+                              actions: [
+                                TextButton(
+                                    child: const Text('OK'),
+                                    onPressed: (){
+                                      Navigator.pop(context);
+                                    }
+                                )
+                              ],
+                            );
+                          }
+                      );
+                    }
+                  },
+                  child: Text("Login")
+              ),
 
             ],
           ),
